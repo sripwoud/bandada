@@ -1,0 +1,15 @@
+[env]
+_ = { file = ".env.yaml" }
+
+[tasks.docker-login]
+run = "echo $GH_PAT | docker login ghcr.io -u $USER --password-stdin"
+
+[tasks.publish-docker]
+run = """
+docker build \
+  --label org.opencontainers.image.source=https://github.com/sripwoud/bandada \
+  -t ghcr.io/sripwoud/bandada-api:latest \
+  -f apps/api/Dockerfile . && \
+docker push ghcr.io/sripwoud/bandada-api:latest
+"""
+description = "Build and public docker image to GH packages"
